@@ -12,7 +12,7 @@ class User:
         email = input("Email: ")
         password = input("Password: ")
         
-        conn = sqlite3.connect(self.database_name)
+        conn = sqlite3.connect(self.databaseName)
         cursor = conn.cursor()
 
         cursor.execute(f"SELECT * FROM {self.tableName} WHERE Email = '{email}' AND Password = '{password}'")
@@ -22,8 +22,10 @@ class User:
             self.userID = user_data[0]
             self.loggedIn = True
             print("Login successful")
+            return True;
         else:
             print("Invalid email or password")
+            return False;
 
         conn.close()
         
@@ -40,12 +42,11 @@ class User:
             print("You are not logged in.")
             return
         
-        conn = sqlite3.connect(self.database_name)
+        conn = sqlite3.connect(self.databaseName)
         cursor = conn.cursor()
 
         cursor.execute(f"SELECT * FROM {self.tableName} WHERE UserID = '{self.userID}'")
         user_data = cursor.fetchone()
-
         if user_data is None:
             print("No data found for this user")
         else:
@@ -56,29 +57,38 @@ class User:
         conn.close()
     
     def createAccount(self):
-        email = input("Email: ")
-        password = input("Password: ")
-        firstName = input("First Name: ")
-        lastName = input("Last Name: ")
-        address = input("Address: ")
-        city = input("City: ")
-        state = input("State: ")
-        zip = input("Zip: ")
-
-        userID = email
-
         conn = sqlite3.connect(self.databaseName)
         cursor = conn.cursor()
+        
+        email = input("Email: ")
+        
+        #check if userID exits
+        userID = email
+        cursor.execute(f"SELECT userID FROM {self.tableName} WHERE userID = '{userID}'")
+        exist = cursor.fetchone()
+        #if userID already exists
+        if exist is not None:
+            print("Account with this email already exists")
 
-        cursor.execute(f"INSERT INTO {self.tableName} (UserID, Email, Password, FirstName, LastName, Address, City, State, Zip) VALUES ('{userID}', '{email}', '{password}', '{firstName}', '{lastName}', '{address}', '{city}', '{state}', '{zip}')")
-    
-        conn.commit()
+        else:
+            password = input("Password: ")
+            firstName = input("First Name: ")
+            lastName = input("Last Name: ")
+            address = input("Address: ")
+            city = input("City: ")
+            state = input("State: ")
+            zip = input("Zip: ")
+            
+            cursor.execute(f"INSERT INTO {self.tableName} (UserID, Email, Password, FirstName, LastName, Address, City, State, Zip) VALUES ('{userID}', '{email}', '{password}', '{firstName}', '{lastName}', '{address}', '{city}', '{state}', '{zip}')")
+            conn.commit()
+            print("Account created successfully")
         conn.close()
 
-        print("Account created successfully")
 
     def getLoggedIn(self):
         return self.loggedIn
         
     def getUserID(self):
         return self.userID
+
+

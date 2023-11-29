@@ -1,9 +1,12 @@
 import sqlite3
+import inventory as inv
 
+    
 class Cart:
-    def __init__(self, database_name, table_name):
+    def __init__(self, database_name='', table_name=''):
         self.database_name = database_name
         self.table_name = table_name
+
     def view_cart(self, user_id, inventory_database):
         if not inventory_database:
             print("Error: Inventory database is not provided.")
@@ -12,7 +15,7 @@ class Cart:
         conn = sqlite3.connect(self.database_name)
         cursor = conn.cursor()
 
-        cursor.execute("SELECT ISBN, quantity FROM {} WHERE userID = ?".format(self.table_name), (user_id,))
+        cursor.execute("SELECT ISBN FROM {} WHERE userID = ?".format(self.table_name), (user_id,))
         cart_items = cursor.fetchall()
 
         if not cart_items:
@@ -20,8 +23,11 @@ class Cart:
         else:
             print(f"Viewing Cart for User: {user_id}")
             for item in cart_items:
-                book_details = inventory_database.get_book_details(item[0])
-                print(f"Title: {book_details['title']}, ISBN: {item[0]}, Quantity: {item[1]}")
+                cursor.execute(f"SELECT Title FROM {inventory_database} WHERE ISBN = '{item[0]}'")
+                item_title = cursor.fetchone()
+                cursor.execute(f"SELECT Quantity FROM {self.table_name} WHERE ISBN = '{item[0]}'")
+                item_quantity = cursor.fetchone()
+                print(f"Title: {item_title[0]}, ISBN: {item[0]}, Quantity: {item_quantity[0]}")
 
         conn.close()
 
@@ -100,6 +106,8 @@ class Cart:
     #     conn.commit()
     #     conn.close()
     def check_out(self, user_id, inventory_database):
+        #inv import
+        i = inv.inv(self.database_name, inventory_database)
         if not inventory_database:
             print("Error: Inventory database is not provided.")
             return
@@ -114,7 +122,7 @@ class Cart:
             print("Cart is empty. Nothing to check out.")
         else:
             for item in cart_items:
-                inventory_database.decrease_stock(item[0], item[1])
+                i.decreaseStock(item[0])
 
             cursor.execute(f"DELETE FROM {self.table_name} WHERE userID = ?", (user_id,))
             print(f"Checked out successfully. Cart is now empty.")

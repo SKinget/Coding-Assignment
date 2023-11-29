@@ -23,35 +23,42 @@ class inv:
         
         con = sqlite3.connect(self.databaseName)
         cur = con.cursor()
-        inv = cur.execute(f"SELECT ISBN FROM " + self.tableName)
-        inv_items = inv.fetchall()
+        
+        
+        cur.execute(f"SELECT ISBN FROM " + self.tableName)
+        isbns = cur.fetchall()
         
         #displays all items in inventory
         if not self.tableName:
             print (f"Table not found")
         else :
-            for ISBN in inv_items:
-                itemDesc = cur.execute(f"SELECT * FROM " + self.tableName + " WHERE ISBN = " + ISBN)
-                for desc in itemDesc:
-                    print(desc)
+            for isbn in isbns:
+                cur.execute(f"SELECT * FROM {self.tableName} WHERE ISBN = '{isbn[0]}'")
+                itemDesc = cur.fetchall()
+                
+                print("ISBN - Title - Author - Genre - Pages - Published - Stock")
+                for value in zip(itemDesc):
+                    print(f"{value[0]}")
         con.close()
 
         
     def searchInventory(self):
         #asks for title
-        title = input("Enter a title: ")
+        intitle = str(input("Enter a title: "))
+        
 
         con = sqlite3.connect(self.databaseName)
         cur = con.cursor()
-        titles = cur.execute(f"SELECT Title FROM " + self.tableName)
+        cur.execute(f"SELECT * FROM {self.tableName} WHERE Title = '{intitle}'")
+        titleDesc= cur.fetchone()
+        
         
         #check if title in db
-        if title in titles:
-            titleDesc = cur.execute(f"SELECT * FROM " + self.tableName + " WHERE Title = " + title)
-            for item in titleDesc:
-                print(item + " ")
-        else:
+        if titleDesc is None:
             print("Title not found")
+        else:
+            for column, value in zip(cur.description, titleDesc):
+                print(f"{column[0]}:{value}")
         con.close()
 
     def decreaseStock(self, ISBN):
@@ -59,19 +66,19 @@ class inv:
         #find isbn in table
         con = sqlite3.connect(self.databaseName)
         cur = con.cursor()
-        isbn = cur.execute(f"SELECT ISBN FROM " + self.tableName+ " WHERE ISBN = " + ISBN)
-
-        if not isbn:
+        cur.execute(f"SELECT ISBN FROM {self.tableName} WHERE ISBN = '{ISBN}'")
+        isbn = cur.fetchone()
+        
+        
+        if isbn is None:
             print("ISBN not found.")
         else:
-            cur.execute(f"UPDATE Inventory SET Stock = (Stock - 1) WHERE ISBN = " + ISBN)
+            cur.execute(f"SELECT Stock FROM {self.tableName} WHERE ISBN = '{ISBN}'")
+            stock = cur.fetchone()
+            stock = stock[0] - 1
+            cur.execute(f"UPDATE {self.tableName} SET Stock = {stock} WHERE ISBN = '{ISBN}'")
+        con.commit()
         con.close()
-
-
-
-
-
-
 
 
 

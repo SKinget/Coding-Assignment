@@ -122,7 +122,6 @@ while (on == 1):
             print("Viewing cart")
             c.view_cart(u.userID, i.tableName)
             
-
         #add item to cart
         elif (choice4 == '3'):
             print("Add item to cart")
@@ -139,6 +138,7 @@ while (on == 1):
         elif (choice4 == '5'):
             print("Checking out")
             c.check_out(u.userID, i.tableName)
+            
         else:
             print("Invalid option")
     
