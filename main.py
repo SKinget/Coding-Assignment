@@ -8,39 +8,46 @@ import cart as cart
 #main
 
 #seting classes
-i = inv.inv(Ecommerce.db, Inventory)
-u = user.User(Ecommerce.db, User)
-c = cart.Cart(Ecommerce.db, Cart)
+i = inv.inv('./Ecommerce.db', 'Inventory')
+u = user.User('./Ecommerce.db', 'User')
+c = cart.Cart('./Ecommerce.db', 'Cart')
 
 #some variables for loops
+
 on = 1
-menuOption = 1
+menuOption = 3
 choice1 = '1'
 
 print("Menu\n\n")
 #before login
 while (on == 1):
     while (menuOption == 1):
-        print("1. Login\n2. Create Account\n3. Logout")
+        print("1. Login\n2. Create Account\n3. Logout\n4.Exit")
         choice1 = input("Enter choice:")
-        print(choice1)
 
-        
+        #login
         if (choice1 == '1'):
             print("Login")
-            i.searchInventory()
-            user.login()
+            u.login()
             menuOption = 2
-            
+        #creat account
         elif (choice1 == '2'):
             print("Creat account")
-            u.createAccount()
-            menuOption = 2
-            
+            bool = u.createAccount()
+            if (bool == False):
+                pass
+            elif (bool == True):
+                menuOption = 2
+        #logout
         elif (choice1 == '3'):
             print("Logout")
-            u.loggout()
+            u.logout()
             menuOption = 1
+        #exit program 
+        elif (choice1 == '4'):
+            print("Exitting")
+            menuOption = 0
+            on = 0
             
         else:
             print("Invalid option")
@@ -78,7 +85,7 @@ while (on == 1):
 
     # after login inventory information
     while (menuOption == 3):
-        print("Inventory Information")
+        print("\nInventory Information\n")
         print("1.Go back\n2.View inventory\n3.Search inventory\n")
         choice3 = input("Enter choice: ")
         
