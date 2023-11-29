@@ -7,7 +7,7 @@ class inv:
         self.tableName = tableName
 
         
-    '''def setDatabaseName(self, databaseName):
+    def setDatabaseName(self, databaseName):
         self.databaseName = databaseName
 
     def getDatabaseName(self):
@@ -17,7 +17,7 @@ class inv:
         self.tableName = tableName
         
     def getTableName(self):
-        return self.tableName'''
+        return self.tableName
 
     def viewInventory(self):
         
@@ -48,6 +48,10 @@ class inv:
         #check if title in db
         if title in titles:
             titleDesc = cur.execute(f"SELECT * FROM " + self.tableName + " WHERE Title = " + title)
+            for item in titleDesc:
+                print(item + " ")
+        else:
+            print("Title not found")
         con.close()
 
     def decreaseStock(self, ISBN):

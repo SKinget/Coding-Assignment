@@ -15,7 +15,7 @@ c = cart.Cart('./Ecommerce.db', 'Cart')
 #some variables for loops
 
 on = 1
-menuOption = 3
+menuOption = 1
 choice1 = '1'
 
 print("Menu\n\n")
@@ -28,16 +28,16 @@ while (on == 1):
         #login
         if (choice1 == '1'):
             print("Login")
-            u.login()
-            menuOption = 2
-        #creat account
-        elif (choice1 == '2'):
-            print("Creat account")
-            bool = u.createAccount()
+            bool = u.login()
             if (bool == False):
                 pass
             elif (bool == True):
                 menuOption = 2
+        #creat account
+        elif (choice1 == '2'):
+            print("Create account")
+            u.createAccount()
+            
         #logout
         elif (choice1 == '3'):
             print("Logout")
@@ -110,19 +110,20 @@ while (on == 1):
     # after login cart information
     while (menuOption == 4):
         print("\nCart Information\n")
-        print("")
+        print("1.Go Back\n2.Search cart\n3.Add item to cart\n4.Remove item from clark\n5.Check out")
         choice4 = input("Enter choice: ")
 
         #back
         if (choice4 == '1'):
             menuOption = 2
 
-        #view inv
+        #view cart
         elif (choice4 == '2'):
             print("Viewing cart")
+            c.view_cart(u.userID, i.tableName)
             
 
-        #search inv
+        #add item to cart
         elif (choice4 == '3'):
             print("Add item to cart")
             ISBN = input("Enter ISBN of item to add: ")
