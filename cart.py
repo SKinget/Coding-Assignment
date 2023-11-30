@@ -49,22 +49,23 @@ class Cart:
     #     conn.close()
 
     def add_to_cart(self, user_id, ISBN):
+        
         conn = sqlite3.connect(self.database_name)
         cursor = conn.cursor()
-
+        
         cursor.execute("SELECT quantity FROM {} WHERE userID = ? AND ISBN = ?".format(self.table_name), (user_id, ISBN))
         existing_quantity = cursor.fetchone()
-
+        
         if existing_quantity:
             new_quantity = existing_quantity[0] + 1
             cursor.execute("UPDATE {} SET quantity = ? WHERE userID = ? AND ISBN = ?".format(self.table_name), (new_quantity, user_id, ISBN))
         else:
             cursor.execute("INSERT INTO {} (userID, ISBN, quantity) VALUES (?, ?, ?)".format(self.table_name), (user_id, ISBN, 1))
-
+            
         conn.commit()
         conn.close()
-
         print(f"Added {ISBN} to Cart for User: {user_id}")
+        
 
     def remove_from_cart(self, user_id, ISBN):
         conn = sqlite3.connect(self.database_name)

@@ -22,7 +22,7 @@ print("Menu\n\n")
 #before login
 while (on == 1):
     while (menuOption == 1):
-        print("1. Login\n2. Create Account\n3. Logout\n4.Exit")
+        print("1.Login\n2.Create Account\n3.Logout\n4.Exit")
         choice1 = input("Enter choice:")
 
         #login
@@ -56,7 +56,7 @@ while (on == 1):
     #After login main menu
     while (menuOption == 2):
         print("\nMain Menu\n")
-        print("1.Logout\n2.View account information\n3.Inventory informaiton\n4.Cart information\n")
+        print("1.Logout\n2.View account information\n3.Inventory information\n4.Cart information\n")
         choice2 = input("Enter choice: ")
 
         #logout
@@ -110,7 +110,7 @@ while (on == 1):
     # after login cart information
     while (menuOption == 4):
         print("\nCart Information\n")
-        print("1.Go Back\n2.Search cart\n3.Add item to cart\n4.Remove item from clark\n5.Check out")
+        print("1.Go Back\n2.Search cart\n3.Add item to cart\n4.Remove item from cart\n5.Check out")
         choice4 = input("Enter choice: ")
 
         #back
